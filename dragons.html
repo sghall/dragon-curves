@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        color: #333;
+        background-color: #EEEEE0;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Dragon Curves in D3</h1>
+    </div>
+    <div id="svg-container"></div>
+    <div class="footer">
+      <p>delimited 2014</p>
+    </div>
+    <script src="lib/d3.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="js/dragons.js"></script>
+    <script>
+      VIZ.onResize();
+
+      $(window).on("resize", function() {
+        VIZ.onResize();
+      });
+
+      for (var i = 0; i < 30000; i++) {
+        VIZ.addPoint(1);
+      }
+    </script>
+  </body>
+</html>
