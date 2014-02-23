@@ -6,6 +6,11 @@
         color: #333;
         background-color: #EEEEE0;
       }
+      .lineSegment {
+        stroke: green;
+        stroke-width: 3px;
+        stroke-linecap: round;
+      }
     </style>
   </head>
   <body>
@@ -26,10 +31,8 @@
       $(window).on("resize", function() {
         VIZ.onResize();
       });
-
-      for (var i = 0; i < 30000; i++) {
-        VIZ.addPoint(1);
-      }
+      VIZ.drawLine(VIZ.segments[0])
+      VIZ.drawLine(VIZ.segments[1])
     </script>
   </body>
 </html>

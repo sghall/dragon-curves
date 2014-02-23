@@ -2,6 +2,12 @@
   var VIZ = {};
   var width = 100, height = 100;
   var basePoint = {x: 0, y: 0};
+  
+  VIZ.segments =[];
+  VIZ.segments.push({ id: _.uniqueId(), x1: 75, y1: 75, x2: 50, y2: 25, a: 45 });
+  VIZ.segments.push({ id: _.uniqueId(), x1: 25, y1: 75, x2: 50, y2: 25, a: 27 });
+  console.log("segments", VIZ.segments);
+
   var colors = ['#006600','#663333','#CC0033','#330099'];
   var svg = d3.select("#svg-container")
     .append("svg")
@@ -26,14 +32,13 @@
     return min + Math.floor(Math.random() * (max - min + 1));
   }
 
-  function renderPoint(data, flag) {
-    svg.append("circle")
-      .attr("class", "fractalPoint")
-      .style("fill", flag ? colors[0]: colors[data.c])
-      .style("opacity", .6)
-      .attr("cx", data.x)
-      .attr("cy", data.y)
-      .attr("r", .002)
+  VIZ.drawLine = function(data) {
+    svg.append("line")
+      .attr("class", "lineSegment")
+      .attr("x1", data.x1)
+      .attr("y1", data.y1)
+      .attr("x2", data.x2)
+      .attr("y2", data.y2)
   }
 
   VIZ.addPoint = function (colors) {
