@@ -1,14 +1,6 @@
 (function (){
   var VIZ = {};
   var width = 100, height = 100;
-  var basePoint = {x: 0, y: 0};
-  
-  VIZ.segments =[];
-  VIZ.segments.push({ id: _.uniqueId(), x1: 10, y1: 10, x2: 50, y2: 50, a: 27 });
-  VIZ.segments.push({ id: _.uniqueId(), x1: 90, y1: 10, x2: 50, y2: 50, a: 45 });
-  console.log("segments", VIZ.segments);
-
-  var colors = ['#006600','#663333','#CC0033','#330099'];
   var svg = d3.select("#svg-container")
     .append("svg")
     .attr("id", "thesvg")
@@ -17,20 +9,8 @@
     .attr("viewBox", "0 0 " + width + " " + height)
     .append("g");
 
-  VIZ.times = 10000;
   VIZ.count = 0;
-
-  function getCoords(x, y) {
-    var p = random(1,1000);
-    return p <= 701 ? {c: 0, x: 0.81 * x + 0.07  * y + 0.12, y: -0.04 * x + 0.84 * y + 0.195}: 
-           p <= 851 ? {c: 1, x: 0.18 * x - 0.25  * y + 0.12, y: 0.27  * x + 0.23 * y + 0.02 }:
-           p <= 980 ? {c: 2, x: 0.19 * x + 0.275 * y + 0.16, y: 0.238 * x - 0.14 * y + 0.12 }:
-           {c: 3, x: 0.0235 * x + 0.087 * y + 0.11, y: 0.045 * x + 0.1666 * y};
-  }
-
-  function random(min, max) {
-    return min + Math.floor(Math.random() * (max - min + 1));
-  }
+  VIZ.segments =[];
 
   VIZ.drawLine = function(data) {
     svg.selectAll(".lineSegment")
@@ -42,41 +22,51 @@
       .attr("y1", function (d) { return d.y1; })
       .attr("x2", function (d) { return d.x2; })
       .attr("y2", function (d) { return d.y2; })
+      .style("stroke", function (d) { return d.c; });
 
     svg.selectAll(".lineSegment")
       .data(data, function (d) { return d.id; })
       .exit()
+        .style("stroke", "grey")
         .transition()
+        .delay(500)
         .duration(500)
-        .attr("transform", function (d) { return "translate(1000,1000)"; })
-        .style("fill-opacity", 0)
+        .style("opacity", 0)
         .remove();
   }
 
-  VIZ.iterate = function (ary) {
-    var l = ary.length, p, midPoint, newX1, newY1;
-
-    for (var i = 0; i < l; i++){
-      p = VIZ.segments.pop();
-      midPoint = {x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2};
-      newX1 = p.x1 + Math.cos( 0.785398163) * (midPoint.x - p.x1) - Math.sin( 0.785398163) * (midPoint.y - p.y1);
-      newY1 = p.y1 + Math.sin( 0.785398163) * (midPoint.x - p.x1) + Math.cos( 0.785398163) * (midPoint.y - p.y1);
-
-      newX2 = p.x2 + Math.cos(-0.785398163) * (midPoint.x - p.x2) - Math.sin(-0.785398163) * (midPoint.y - p.y2);
-      newY2 = p.y2 + Math.sin(-0.785398163) * (midPoint.x - p.x2) + Math.cos(-0.785398163) * (midPoint.y - p.y2);
-
-      VIZ.segments.unshift({ id: _.uniqueId(), x1: p.x1, y1: p.y1, x2: newX1, y2: newY1, a: 45 });
-      VIZ.segments.unshift({ id: _.uniqueId(), x1: p.x2, y1: p.y2, x2: newX2, y2: newY2, a: 45 });
-    }
+  function rotatePoint(point, center, radians) {
+    var cos = Math.cos(radians), sin = Math.sin(radians);
+    return {
+       x: center.x + cos * (point.x - center.x) - sin * (point.y - center.y),
+       y: center.y + sin * (point.x - center.x) + cos * (point.y - center.y)
+    };
   }
 
-  VIZ.addPoint = function (colors) {
-    var xy = getCoords(basePoint.x, basePoint.y);
-    basePoint = xy;
-    if (colors) {
-      renderPoint({c: xy.c, x: xy.x + width / 5, y: xy.y + height / 10}, 1);
-    } else {
-      renderPoint({c: xy.c, x: xy.x + width / 5, y: xy.y + height / 10}, 0);
+  function findIntersection(p1, p2, p3, p4) {
+    var t1 = (p1.x * p2.y - p1.y * p2.x);
+    var t2 = (p3.x * p4.y - p3.y * p4.x);
+    var t3 = (p1.x - p2.x);
+    var t4 = (p3.y - p4.y);
+    var t5 = (p1.y - p2.y);
+    var t6 = (p3.x - p4.x);
+    var nx = (t1 * t6 - t3 * t2)/(t3 * t4 - t5 * t6);
+    var ny = (t1 * t4 - t5 * t2)/(t3 * t4 - t5 * t6);
+    return {x: nx, y: ny};
+  }
+
+  VIZ.iterate = function (ary) {
+    var l = ary.length, segment, p1, p2, mp, r1, r2, ip;
+    for (var i = 0; i < l; i++){
+      segment = VIZ.segments.pop();
+      p1 = {x: segment.x1, y: segment.y1};
+      p2 = {x: segment.x2, y: segment.y2};
+      mp = {x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2};
+      r1 = rotatePoint(mp, {x: p1.x, y: p1.y},  0.785398163);
+      r2 = rotatePoint(mp, {x: p2.x, y: p2.y}, -0.785398163);
+      ip = findIntersection(p1, r1, p2, r2);
+      VIZ.segments.unshift({ id: _.uniqueId(), x1: p1.x, y1: p1.y, x2: ip.x, y2: ip.y, c: segment.c });
+      VIZ.segments.unshift({ id: _.uniqueId(), x1: p2.x, y1: p2.y, x2: ip.x, y2: ip.y, c: segment.c });
     }
   }
 
