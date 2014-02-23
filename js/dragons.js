@@ -4,8 +4,8 @@
   var basePoint = {x: 0, y: 0};
   
   VIZ.segments =[];
-  VIZ.segments.push({ id: _.uniqueId(), x1: 75, y1: 75, x2: 50, y2: 25, a: 45 });
-  VIZ.segments.push({ id: _.uniqueId(), x1: 25, y1: 75, x2: 50, y2: 25, a: 27 });
+  VIZ.segments.push({ id: _.uniqueId(), x1: 10, y1: 10, x2: 50, y2: 50, a: 27 });
+  VIZ.segments.push({ id: _.uniqueId(), x1: 90, y1: 10, x2: 50, y2: 50, a: 45 });
   console.log("segments", VIZ.segments);
 
   var colors = ['#006600','#663333','#CC0033','#330099'];
@@ -33,12 +33,41 @@
   }
 
   VIZ.drawLine = function(data) {
-    svg.append("line")
+    svg.selectAll(".lineSegment")
+      .data(data, function (d) { return d.id; })
+      .enter()
+      .append("line")
       .attr("class", "lineSegment")
-      .attr("x1", data.x1)
-      .attr("y1", data.y1)
-      .attr("x2", data.x2)
-      .attr("y2", data.y2)
+      .attr("x1", function (d) { return d.x1; })
+      .attr("y1", function (d) { return d.y1; })
+      .attr("x2", function (d) { return d.x2; })
+      .attr("y2", function (d) { return d.y2; })
+
+    svg.selectAll(".lineSegment")
+      .data(data, function (d) { return d.id; })
+      .exit()
+        .transition()
+        .duration(500)
+        .attr("transform", function (d) { return "translate(1000,1000)"; })
+        .style("fill-opacity", 0)
+        .remove();
+  }
+
+  VIZ.iterate = function (ary) {
+    var l = ary.length, p, midPoint, newX1, newY1;
+
+    for (var i = 0; i < l; i++){
+      p = VIZ.segments.pop();
+      midPoint = {x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2};
+      newX1 = p.x1 + Math.cos( 0.785398163) * (midPoint.x - p.x1) - Math.sin( 0.785398163) * (midPoint.y - p.y1);
+      newY1 = p.y1 + Math.sin( 0.785398163) * (midPoint.x - p.x1) + Math.cos( 0.785398163) * (midPoint.y - p.y1);
+
+      newX2 = p.x2 + Math.cos(-0.785398163) * (midPoint.x - p.x2) - Math.sin(-0.785398163) * (midPoint.y - p.y2);
+      newY2 = p.y2 + Math.sin(-0.785398163) * (midPoint.x - p.x2) + Math.cos(-0.785398163) * (midPoint.y - p.y2);
+
+      VIZ.segments.unshift({ id: _.uniqueId(), x1: p.x1, y1: p.y1, x2: newX1, y2: newY1, a: 45 });
+      VIZ.segments.unshift({ id: _.uniqueId(), x1: p.x2, y1: p.y2, x2: newX2, y2: newY2, a: 45 });
+    }
   }
 
   VIZ.addPoint = function (colors) {
