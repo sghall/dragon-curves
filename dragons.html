@@ -32,24 +32,23 @@
         VIZ.onResize();
       });
 
-      VIZ.segments.push({ id: _.uniqueId(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#cc9900'});
-      VIZ.segments.push({ id: _.uniqueId(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#cc9900'});
-      VIZ.segments.push({ id: _.uniqueId(), x1: 30, y1: 50, x2: 50, y2: 30, c: '#003366'});
-      VIZ.segments.push({ id: _.uniqueId(), x1: 70, y1: 50, x2: 50, y2: 30, c: '#003366'});
-      VIZ.drawLine(VIZ.segments)
+      VIZ.addSegment({ id: _.uniqueId(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#cc9900'});
+      VIZ.addSegment({ id: _.uniqueId(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#cc9900'});
+      VIZ.addSegment({ id: _.uniqueId(), x1: 30, y1: 50, x2: 50, y2: 30, c: '#003366'});
+      VIZ.addSegment({ id: _.uniqueId(), x1: 70, y1: 50, x2: 50, y2: 30, c: '#003366'});
+      VIZ.drawLines();
 
-      //VIZ.segments.push({ id: _.uniqueId(), x1: 40, y1: 20, x2: 60, y2: 40, c: '#663300'});
-      //VIZ.segments.push({ id: _.uniqueId(), x1: 40, y1: 60, x2: 60, y2: 40, c: '#663300'});
-      //VIZ.segments.push({ id: _.uniqueId(), x1: 60, y1: 20, x2: 40, y2: 40, c: '#999966'});
-      //VIZ.segments.push({ id: _.uniqueId(), x1: 60, y1: 60, x2: 40, y2: 40, c: '#999966'});
+      //VIZ.addSegment({ id: _.uniqueId(), x1: 40, y1: 20, x2: 60, y2: 40, c: '#663300'});
+      //VIZ.addSegment({ id: _.uniqueId(), x1: 40, y1: 60, x2: 60, y2: 40, c: '#663300'});
+      //VIZ.addSegment({ id: _.uniqueId(), x1: 60, y1: 20, x2: 40, y2: 40, c: '#999966'});
+      //VIZ.addSegment({ id: _.uniqueId(), x1: 60, y1: 60, x2: 40, y2: 40, c: '#999966'});
 
 
 
       VIZ.interval = setInterval(function () {
-        VIZ.iterate(VIZ.segments)
-        VIZ.drawLine(VIZ.segments)
+        VIZ.iterate();
+        VIZ.drawLines();
         VIZ.count++;
-        console.log(VIZ.count)
         if (VIZ.count >= 12) {
           clearInterval(VIZ.interval);
         }

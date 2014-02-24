@@ -1,6 +1,6 @@
 (function (){
   var VIZ = {};
-  var width = 100, height = 100;
+  var width = 100, height = 100, segments = [];
   var svg = d3.select("#svg-container")
     .append("svg")
     .attr("id", "thesvg")
@@ -10,11 +10,14 @@
     .append("g");
 
   VIZ.count = 0;
-  VIZ.segments =[];
 
-  VIZ.drawLine = function(data) {
+  VIZ.addSegment = function (obj) {
+    segments.push(obj);
+  }
+
+  VIZ.drawLines = function () {
     svg.selectAll(".lineSegment")
-      .data(data, function (d) { return d.id; })
+      .data(segments, function (d) { return d.id; })
       .enter()
       .append("line")
       .attr("class", "lineSegment")
@@ -25,7 +28,7 @@
       .style("stroke", function (d) { return d.c; });
 
     svg.selectAll(".lineSegment")
-      .data(data, function (d) { return d.id; })
+      .data(segments, function (d) { return d.id; })
       .exit()
         .style("stroke", "grey")
         .transition()
@@ -55,18 +58,18 @@
     return {x: nx, y: ny};
   }
 
-  VIZ.iterate = function (ary) {
-    var l = ary.length, segment, p1, p2, mp, r1, r2, ip;
-    for (var i = 0; i < l; i++){
-      segment = VIZ.segments.pop();
+  VIZ.iterate = function () {
+    var len = segments.length, segment, p1, p2, mp, r1, r2, ip;
+    for (var i = 0; i < len; i++){
+      segment = segments.pop();
       p1 = {x: segment.x1, y: segment.y1};
       p2 = {x: segment.x2, y: segment.y2};
       mp = {x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2};
       r1 = rotatePoint(mp, {x: p1.x, y: p1.y},  0.785398163);
       r2 = rotatePoint(mp, {x: p2.x, y: p2.y}, -0.785398163);
       ip = findIntersection(p1, r1, p2, r2);
-      VIZ.segments.unshift({ id: _.uniqueId(), x1: p1.x, y1: p1.y, x2: ip.x, y2: ip.y, c: segment.c });
-      VIZ.segments.unshift({ id: _.uniqueId(), x1: p2.x, y1: p2.y, x2: ip.x, y2: ip.y, c: segment.c });
+      segments.unshift({ id: _.uniqueId(), x1: p1.x, y1: p1.y, x2: ip.x, y2: ip.y, c: segment.c });
+      segments.unshift({ id: _.uniqueId(), x1: p2.x, y1: p2.y, x2: ip.x, y2: ip.y, c: segment.c });
     }
   }
 
