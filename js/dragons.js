@@ -11,6 +11,10 @@
 
   VIZ.count = 0;
 
+  VIZ.clear = function () {
+    lines = [];
+  }
+
   VIZ.addLine = function (obj) {
     lines.push(obj);
   }

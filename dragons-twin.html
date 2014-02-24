@@ -3,8 +3,8 @@
     <meta charset="utf-8">
     <style>
       body {
-        color: grey;
-        background-color: #ffffcc;
+        color: white;
+        background-color: grey;
       }
       .lineSegment {
         stroke-width: .25px;
@@ -16,9 +16,13 @@
   <body>
     <div>
       <h1>Dragon Curve in D3</h1>
+      <p>Works best in Chrome on a fast machine.</p>
+      <p>You can stop the animation and step through each iteration with the buttons.</p>
+      <p>The svg will resize with the broswer window if you want to change the scaling.</p>
     </div>
     <div id="svg-container">
       <button id="stopBtn">Stop</button>
+      <button id="beginBtn">Back to Beginning</button>
       <button id="iterateBtn">Iterate Once</button>
     </div>
     <div class="footer">
@@ -39,17 +43,27 @@
         clearInterval(VIZ.interval);
       });
 
+      $("#beginBtn").on("click", function () {
+        clearInterval(VIZ.interval);
+        VIZ.start();
+      });
+
       $("#iterateBtn").on("click", function () {
         clearInterval(VIZ.interval);
         VIZ.iterate();
         VIZ.drawLines();
       });
 
-      VIZ.addSegment({ id: _.uniqueId(), x1: 30, y1: 20, x2: 50, y2: 40, c: '#cc9900'});
-      VIZ.addSegment({ id: _.uniqueId(), x1: 70, y1: 20, x2: 50, y2: 40, c: '#cc9900'});
-      VIZ.addSegment({ id: _.uniqueId(), x1: 30, y1: 60, x2: 50, y2: 40, c: '#003366'});
-      VIZ.addSegment({ id: _.uniqueId(), x1: 70, y1: 60, x2: 50, y2: 40, c: '#003366'});
-      VIZ.drawLines();
+      VIZ.start = function () {
+        VIZ.clear();
+        VIZ.addLine({ id: _.uniqueId(), x1: 30, y1: 20, x2: 50, y2: 40, c: '#dfebe6'});
+        VIZ.addLine({ id: _.uniqueId(), x1: 70, y1: 20, x2: 50, y2: 40, c: '#dfebe6'});
+        VIZ.addLine({ id: _.uniqueId(), x1: 30, y1: 60, x2: 50, y2: 40, c: '#003366'});
+        VIZ.addLine({ id: _.uniqueId(), x1: 70, y1: 60, x2: 50, y2: 40, c: '#003366'});
+        VIZ.drawLines();
+      }
+
+      VIZ.start();
 
       VIZ.interval = setInterval(function () {
         VIZ.iterate();
