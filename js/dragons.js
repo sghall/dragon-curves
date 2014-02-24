@@ -11,7 +11,7 @@
 
   VIZ.count = 0;
 
-  VIZ.addSegment = function (obj) {
+  VIZ.addLine = function (obj) {
     lines.push(obj);
   }
 
