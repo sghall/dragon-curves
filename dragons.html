@@ -3,21 +3,24 @@
     <meta charset="utf-8">
     <style>
       body {
-        color: #333;
+        color: grey;
         background-color: #ffffcc;
       }
       .lineSegment {
         stroke-width: .25px;
-        opacity: .5;
+        opacity: .7;
         stroke-linecap: round;
       }
     </style>
   </head>
   <body>
     <div>
-      <h1>Dragon Curves in D3</h1>
+      <h1>Dragon Curve in D3</h1>
     </div>
-    <div id="svg-container"></div>
+    <div id="svg-container">
+      <button id="stopBtn">Stop</button>
+      <button id="iterateBtn">Iterate Once</button>
+    </div>
     <div class="footer">
       <p>delimited 2014</p>
     </div>
@@ -32,6 +35,16 @@
         VIZ.onResize();
       });
 
+      $("#stopBtn").on("click", function () {
+        clearInterval(VIZ.interval);
+      });
+
+      $("#iterateBtn").on("click", function () {
+        clearInterval(VIZ.interval);
+        VIZ.iterate();
+        VIZ.drawLines();
+      });
+
       VIZ.addSegment({ id: _.uniqueId(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#cc9900'});
       VIZ.addSegment({ id: _.uniqueId(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#cc9900'});
       VIZ.addSegment({ id: _.uniqueId(), x1: 30, y1: 50, x2: 50, y2: 30, c: '#003366'});
@@ -42,8 +55,6 @@
       //VIZ.addSegment({ id: _.uniqueId(), x1: 40, y1: 60, x2: 60, y2: 40, c: '#663300'});
       //VIZ.addSegment({ id: _.uniqueId(), x1: 60, y1: 20, x2: 40, y2: 40, c: '#999966'});
       //VIZ.addSegment({ id: _.uniqueId(), x1: 60, y1: 60, x2: 40, y2: 40, c: '#999966'});
-
-
 
       VIZ.interval = setInterval(function () {
         VIZ.iterate();
