@@ -44,6 +44,7 @@
       });
 
       $("#beginBtn").on("click", function () {
+        clearInterval(VIZ.interval);
         VIZ.start();
       });
 
