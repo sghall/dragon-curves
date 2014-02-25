@@ -30,7 +30,6 @@
     </div>
     <script src="lib/d3.js"></script>
     <script src="lib/jquery.js"></script>
-    <script src="lib/underscore.js"></script>
     <script src="js/dragons.js"></script>
     <script>
       VIZ.onResize();
@@ -56,8 +55,8 @@
 
       VIZ.start = function () {
         VIZ.clear();
-        VIZ.addLine({id: _.uniqueId(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#003366'});
-        VIZ.addLine({id: _.uniqueId(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#003366'});
+        VIZ.add({id: VIZ.id(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#003366'});
+        VIZ.add({id: VIZ.id(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#003366'});
         VIZ.drawLines();
       }
 

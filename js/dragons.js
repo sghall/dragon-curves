@@ -1,6 +1,7 @@
 (function (){
   var VIZ = {};
-  var width = 100, height = 100, lines = [];
+  var width = 100, height = 100, lines = [], idCounter = 0;
+
   var svg = d3.select("#svg-container")
     .append("svg")
     .attr("id", "thesvg")
@@ -11,11 +12,16 @@
 
   VIZ.count = 0;
 
+  VIZ.id = function(prefix) {
+    var id = ++idCounter + '';
+    return prefix ? prefix + id : id;
+  };
+
   VIZ.clear = function () {
     lines = [];
   }
 
-  VIZ.addLine = function (obj) {
+  VIZ.add = function (obj) {
     lines.push(obj);
   }
 
@@ -73,8 +79,8 @@
       r1 = rotatePoint(mp, {x: p1.x, y: p1.y},  0.785398163);
       r2 = rotatePoint(mp, {x: p2.x, y: p2.y}, -0.785398163);
       cp = findIntersection(p1, r1, p2, r2);
-      lines.unshift({id: _.uniqueId(), x1: p1.x, y1: p1.y, x2: cp.x, y2: cp.y, c: line.c});
-      lines.unshift({id: _.uniqueId(), x1: p2.x, y1: p2.y, x2: cp.x, y2: cp.y, c: line.c});
+      lines.unshift({id: VIZ.id(), x1: p1.x, y1: p1.y, x2: cp.x, y2: cp.y, c: line.c});
+      lines.unshift({id: VIZ.id(), x1: p2.x, y1: p2.y, x2: cp.x, y2: cp.y, c: line.c});
     }
   }
 

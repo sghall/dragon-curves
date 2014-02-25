@@ -8,7 +8,7 @@
       }
       .lineSegment {
         stroke-width: .25px;
-        opacity: .7;
+        opacity: .9;
         stroke-linecap: round;
       }
     </style>
@@ -30,7 +30,6 @@
     </div>
     <script src="lib/d3.js"></script>
     <script src="lib/jquery.js"></script>
-    <script src="lib/underscore.js"></script>
     <script src="js/dragons.js"></script>
     <script>
       VIZ.onResize();
@@ -56,10 +55,10 @@
 
       VIZ.start = function () {
         VIZ.clear();
-        VIZ.addLine({ id: _.uniqueId(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#dfebe6'});
-        VIZ.addLine({ id: _.uniqueId(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#dfebe6'});
-        VIZ.addLine({ id: _.uniqueId(), x1: 30, y1: 50, x2: 50, y2: 30, c: '#122759'});
-        VIZ.addLine({ id: _.uniqueId(), x1: 70, y1: 50, x2: 50, y2: 30, c: '#293c66'});
+        VIZ.add({id: VIZ.id(), x1: 30, y1: 30, x2: 50, y2: 50, c: '#dfebe6'});
+        VIZ.add({id: VIZ.id(), x1: 70, y1: 30, x2: 50, y2: 50, c: '#dfebe6'});
+        VIZ.add({id: VIZ.id(), x1: 30, y1: 50, x2: 50, y2: 30, c: '#122759'});
+        VIZ.add({id: VIZ.id(), x1: 70, y1: 50, x2: 50, y2: 30, c: '#293c66'});
         VIZ.drawLines();
       }
 
