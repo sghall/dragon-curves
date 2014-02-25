@@ -64,7 +64,7 @@
   }
 
   VIZ.iterate = function () {
-    var len = lines.length, line, p1, p2, mp, r1, r2, ip;
+    var len = lines.length, line, p1, p2, mp, r1, r2, cp;
     for (var i = 0; i < len; i++){
       line = lines.pop();
       p1 = {x: line.x1, y: line.y1};
@@ -72,9 +72,9 @@
       mp = {x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2};
       r1 = rotatePoint(mp, {x: p1.x, y: p1.y},  0.785398163);
       r2 = rotatePoint(mp, {x: p2.x, y: p2.y}, -0.785398163);
-      ip = findIntersection(p1, r1, p2, r2);
-      lines.unshift({id: _.uniqueId(), x1: p1.x, y1: p1.y, x2: ip.x, y2: ip.y, c: line.c});
-      lines.unshift({id: _.uniqueId(), x1: p2.x, y1: p2.y, x2: ip.x, y2: ip.y, c: line.c});
+      cp = findIntersection(p1, r1, p2, r2);
+      lines.unshift({id: _.uniqueId(), x1: p1.x, y1: p1.y, x2: cp.x, y2: cp.y, c: line.c});
+      lines.unshift({id: _.uniqueId(), x1: p2.x, y1: p2.y, x2: cp.x, y2: cp.y, c: line.c});
     }
   }
 
